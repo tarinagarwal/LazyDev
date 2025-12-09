@@ -1,17 +1,28 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+import asyncio
 
 from database import connect_db, close_db
 from routers import auth, jobs, upload
+from worker import run_worker
+
+# Background worker task
+worker_task = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    global worker_task
     # Startup
     await connect_db()
+    # Start worker in background
+    worker_task = asyncio.create_task(run_worker())
+    print("Worker started in background")
     yield
     # Shutdown
+    if worker_task:
+        worker_task.cancel()
     await close_db()
 
 
