@@ -70,7 +70,10 @@ const Upload: React.FC = () => {
           return;
         }
       }
-      const result = await jobsApi.upload(zipFile, { repo, commits: finalCommits });
+      const result = await jobsApi.upload(zipFile, {
+        repo,
+        commits: finalCommits,
+      });
       navigate(`/jobs/${result.job_id}`);
     } catch (err: any) {
       setError(err.response?.data?.detail || "Upload failed");
@@ -125,14 +128,14 @@ const Upload: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setJsonMode(false)}
-                className={`toggle-btn ${!jsonMode ? 'active' : ''}`}
+                className={`toggle-btn ${!jsonMode ? "active" : ""}`}
               >
                 Manual
               </button>
               <button
                 type="button"
                 onClick={() => setJsonMode(true)}
-                className={`toggle-btn ${jsonMode ? 'active' : ''}`}
+                className={`toggle-btn ${jsonMode ? "active" : ""}`}
               >
                 Paste JSON
               </button>
@@ -152,7 +155,12 @@ const Upload: React.FC = () => {
             </div>
           ) : (
             <>
-              <button type="button" onClick={addCommit} className="add-btn" style={{marginBottom: '16px'}}>
+              <button
+                type="button"
+                onClick={addCommit}
+                className="add-btn"
+                style={{ marginBottom: "16px" }}
+              >
                 + Add Commit
               </button>
               {commits.map((commit, index) => (
@@ -176,7 +184,9 @@ const Upload: React.FC = () => {
                       type="text"
                       placeholder="file1.py, src/app.js, README.md"
                       value={commit.files.join(", ")}
-                      onChange={(e) => updateCommit(index, "files", e.target.value)}
+                      onChange={(e) =>
+                        updateCommit(index, "files", e.target.value)
+                      }
                       required
                     />
                   </div>

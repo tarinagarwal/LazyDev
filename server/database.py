@@ -1,7 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from config import get_settings
-
-settings = get_settings()
+import os
 
 client: AsyncIOMotorClient = None
 db = None
@@ -9,9 +7,16 @@ db = None
 
 async def connect_db():
     global client, db
-    client = AsyncIOMotorClient(settings.mongodb_uri)
-    db = client.lazydev
-    print("Connected to MongoDB")
+    try:
+        mongodb_uri = os.getenv("MONGODB_URI")
+        if not mongodb_uri:
+            print("WARNING: MONGODB_URI not set, skipping database connection")
+            return
+        client = AsyncIOMotorClient(mongodb_uri)
+        db = client.lazydev
+        print("Connected to MongoDB")
+    except Exception as e:
+        print(f"Failed to connect to MongoDB: {e}")
 
 
 async def close_db():

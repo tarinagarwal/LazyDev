@@ -558,7 +558,7 @@ body {
   border: 1px solid #333;
   border-radius: 8px;
   color: #e0e0e0;
-  font-family: 'Consolas', 'Monaco', monospace;
+  font-family: "Consolas", "Monaco", monospace;
   font-size: 0.9rem;
   resize: vertical;
   min-height: 200px;
