@@ -1,17 +1,17 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 // Add auth token to requests
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -23,8 +23,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
@@ -78,34 +78,37 @@ export interface JobDetail extends Job {
 
 export const authApi = {
   login: async (data: LoginRequest): Promise<LoginResponse> => {
-    const response = await api.post('/login', data);
+    const response = await api.post("/login", data);
     return response.data;
   },
 };
 
 export const jobsApi = {
   list: async (): Promise<Job[]> => {
-    const response = await api.get('/jobs');
+    const response = await api.get("/jobs");
     return response.data;
   },
-  
+
   get: async (id: string): Promise<JobDetail> => {
     const response = await api.get(`/jobs/${id}`);
     return response.data;
   },
-  
+
   cancel: async (id: string): Promise<void> => {
     await api.post(`/jobs/${id}/cancel`);
   },
-  
-  upload: async (zipFile: File, commitPlan: CommitPlanRequest): Promise<{ job_id: string }> => {
+
+  upload: async (
+    zipFile: File,
+    commitPlan: CommitPlanRequest
+  ): Promise<{ job_id: string }> => {
     const formData = new FormData();
-    formData.append('zip_file', zipFile);
-    formData.append('commit_plan', JSON.stringify(commitPlan));
-    
-    const response = await api.post('/upload', formData, {
+    formData.append("zip_file", zipFile);
+    formData.append("commit_plan", JSON.stringify(commitPlan));
+
+    const response = await api.post("/upload", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;

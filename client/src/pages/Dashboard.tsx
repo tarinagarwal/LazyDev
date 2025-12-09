@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { jobsApi } from '../api/client';
-import type { Job } from '../api/client';
-import { useAuth } from '../context/AuthContext';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { jobsApi } from "../api/client";
+import type { Job } from "../api/client";
+import { useAuth } from "../context/AuthContext";
 
 const Dashboard: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -14,7 +14,7 @@ const Dashboard: React.FC = () => {
       const data = await jobsApi.list();
       setJobs(data);
     } catch (err) {
-      console.error('Failed to fetch jobs:', err);
+      console.error("Failed to fetch jobs:", err);
     } finally {
       setLoading(false);
     }
@@ -29,11 +29,11 @@ const Dashboard: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     const badges: Record<string, string> = {
-      pending: '⏳ Pending',
-      in_progress: '🔄 In Progress',
-      completed: '✅ Completed',
-      failed: '❌ Failed',
-      cancelled: '🛑 Cancelled',
+      pending: "⏳ Pending",
+      in_progress: "🔄 In Progress",
+      completed: "✅ Completed",
+      failed: "❌ Failed",
+      cancelled: "🛑 Cancelled",
     };
     return badges[status] || status;
   };
@@ -47,20 +47,26 @@ const Dashboard: React.FC = () => {
       <header className="dashboard-header">
         <h1>🦥 LazyDev</h1>
         <nav>
-          <Link to="/upload" className="nav-btn">+ New Job</Link>
-          <button onClick={logout} className="nav-btn logout">Logout</button>
+          <Link to="/upload" className="nav-btn">
+            + New Job
+          </Link>
+          <button onClick={logout} className="nav-btn logout">
+            Logout
+          </button>
         </nav>
       </header>
 
       <main className="dashboard-content">
         <h2>Jobs</h2>
-        
+
         {loading ? (
           <div className="loading">Loading jobs...</div>
         ) : jobs.length === 0 ? (
           <div className="empty-state">
             <p>No jobs yet. Create your first automated commit job!</p>
-            <Link to="/upload" className="create-btn">Create Job</Link>
+            <Link to="/upload" className="create-btn">
+              Create Job
+            </Link>
           </div>
         ) : (
           <div className="jobs-list">
@@ -74,9 +80,13 @@ const Dashboard: React.FC = () => {
                 </div>
                 <div className="job-progress">
                   <div className="progress-bar">
-                    <div 
+                    <div
                       className="progress-fill"
-                      style={{ width: `${(job.completed_commits / job.total_commits) * 100}%` }}
+                      style={{
+                        width: `${
+                          (job.completed_commits / job.total_commits) * 100
+                        }%`,
+                      }}
                     />
                   </div>
                   <span className="progress-text">

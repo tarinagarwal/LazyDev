@@ -63,16 +63,16 @@ def run_git_command(args: list, cwd: str) -> tuple:
 
 def setup_git_repo(work_dir: str, repo_name: str) -> tuple:
     """Initialize and configure git repo"""
-    # Init repo
+    
     success, output = run_git_command(["init"], work_dir)
     if not success:
         return False, f"Failed to init: {output}"
     
-    # Configure user
+  
     run_git_command(["config", "user.email", f"{settings.github_username}@users.noreply.github.com"], work_dir)
     run_git_command(["config", "user.name", settings.github_username], work_dir)
     
-    # Add remote
+   
     remote_url = f"https://{settings.github_username}:{settings.github_token}@github.com/{repo_name}.git"
     success, output = run_git_command(["remote", "add", "origin", remote_url], work_dir)
     if not success and "already exists" not in output:
@@ -83,7 +83,7 @@ def setup_git_repo(work_dir: str, repo_name: str) -> tuple:
 
 def commit_files(work_dir: str, files: list, message: str) -> tuple:
     """Stage and commit specific files"""
-    # Check which files exist
+  
     existing_files = []
     for f in files:
         file_path = os.path.join(work_dir, f)
@@ -93,7 +93,7 @@ def commit_files(work_dir: str, files: list, message: str) -> tuple:
     if not existing_files:
         return False, "No files found to commit"
     
-    # Stage files
+  
     for f in existing_files:
         success, output = run_git_command(["add", f], work_dir)
         if not success:

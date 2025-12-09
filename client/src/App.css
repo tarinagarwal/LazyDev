@@ -6,7 +6,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: #0f0f0f;
   color: #e0e0e0;
   min-height: 100vh;
@@ -83,7 +83,8 @@ body {
   text-align: center;
 }
 
-.login-btn, .submit-btn {
+.login-btn,
+.submit-btn {
   width: 100%;
   padding: 14px;
   background: #4a9eff;
@@ -96,11 +97,13 @@ body {
   transition: background 0.2s;
 }
 
-.login-btn:hover, .submit-btn:hover {
+.login-btn:hover,
+.submit-btn:hover {
   background: #3a8eef;
 }
 
-.login-btn:disabled, .submit-btn:disabled {
+.login-btn:disabled,
+.submit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -158,7 +161,8 @@ body {
   margin-bottom: 20px;
 }
 
-.loading, .empty-state {
+.loading,
+.empty-state {
   text-align: center;
   padding: 60px 20px;
   color: #888;
@@ -214,11 +218,26 @@ body {
   font-weight: 500;
 }
 
-.status-pending { background: #3d3d15; color: #ffd93d; }
-.status-in_progress { background: #15303d; color: #4a9eff; }
-.status-completed { background: #153d1f; color: #4ade80; }
-.status-failed { background: #3d1515; color: #ff6b6b; }
-.status-cancelled { background: #2d2d2d; color: #888; }
+.status-pending {
+  background: #3d3d15;
+  color: #ffd93d;
+}
+.status-in_progress {
+  background: #15303d;
+  color: #4a9eff;
+}
+.status-completed {
+  background: #153d1f;
+  color: #4ade80;
+}
+.status-failed {
+  background: #3d1515;
+  color: #ff6b6b;
+}
+.status-cancelled {
+  background: #2d2d2d;
+  color: #888;
+}
 
 .job-progress {
   margin-bottom: 12px;
@@ -250,7 +269,8 @@ body {
 }
 
 /* Upload Page */
-.upload-page, .job-details-page {
+.upload-page,
+.job-details-page {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
@@ -488,7 +508,8 @@ body {
   margin-top: 8px;
 }
 
-.loading-page, .error-page {
+.loading-page,
+.error-page {
   display: flex;
   flex-direction: column;
   align-items: center;

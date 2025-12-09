@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { jobsApi } from '../api/client';
-import type { CommitPlan } from '../api/client';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { jobsApi } from "../api/client";
+import type { CommitPlan } from "../api/client";
 
 const Upload: React.FC = () => {
   const [zipFile, setZipFile] = useState<File | null>(null);
-  const [repo, setRepo] = useState('');
+  const [repo, setRepo] = useState("");
   const [commits, setCommits] = useState<CommitPlan[]>([
-    { files: [], message: '', delay_mins: 0 }
+    { files: [], message: "", delay_mins: 0 },
   ]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +20,7 @@ const Upload: React.FC = () => {
   };
 
   const addCommit = () => {
-    setCommits([...commits, { files: [], message: '', delay_mins: 30 }]);
+    setCommits([...commits, { files: [], message: "", delay_mins: 30 }]);
   };
 
   const removeCommit = (index: number) => {
@@ -31,8 +31,11 @@ const Upload: React.FC = () => {
 
   const updateCommit = (index: number, field: keyof CommitPlan, value: any) => {
     const updated = [...commits];
-    if (field === 'files') {
-      updated[index].files = value.split(',').map((f: string) => f.trim()).filter(Boolean);
+    if (field === "files") {
+      updated[index].files = value
+        .split(",")
+        .map((f: string) => f.trim())
+        .filter(Boolean);
     } else {
       (updated[index] as any)[field] = value;
     }
@@ -42,22 +45,22 @@ const Upload: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!zipFile) {
-      setError('Please select a zip file');
+      setError("Please select a zip file");
       return;
     }
     if (!repo) {
-      setError('Please enter a repository name');
+      setError("Please enter a repository name");
       return;
     }
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const result = await jobsApi.upload(zipFile, { repo, commits });
       navigate(`/jobs/${result.job_id}`);
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Upload failed');
+      setError(err.response?.data?.detail || "Upload failed");
     } finally {
       setLoading(false);
     }
@@ -66,14 +69,16 @@ const Upload: React.FC = () => {
   return (
     <div className="upload-page">
       <header className="page-header">
-        <Link to="/" className="back-link">← Back to Dashboard</Link>
+        <Link to="/" className="back-link">
+          ← Back to Dashboard
+        </Link>
         <h1>Create New Job</h1>
       </header>
 
       <form onSubmit={handleSubmit} className="upload-form">
         <div className="form-section">
           <h3>Project Details</h3>
-          
+
           <div className="form-group">
             <label htmlFor="repo">Target Repository</label>
             <input
@@ -113,8 +118,8 @@ const Upload: React.FC = () => {
               <div className="commit-header">
                 <span className="commit-number">Commit #{index + 1}</span>
                 {commits.length > 1 && (
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => removeCommit(index)}
                     className="remove-btn"
                   >
@@ -128,8 +133,8 @@ const Upload: React.FC = () => {
                 <input
                   type="text"
                   placeholder="file1.py, src/app.js, README.md"
-                  value={commit.files.join(', ')}
-                  onChange={(e) => updateCommit(index, 'files', e.target.value)}
+                  value={commit.files.join(", ")}
+                  onChange={(e) => updateCommit(index, "files", e.target.value)}
                   required
                 />
               </div>
@@ -140,7 +145,9 @@ const Upload: React.FC = () => {
                   type="text"
                   placeholder="Initial setup"
                   value={commit.message}
-                  onChange={(e) => updateCommit(index, 'message', e.target.value)}
+                  onChange={(e) =>
+                    updateCommit(index, "message", e.target.value)
+                  }
                   required
                 />
               </div>
@@ -151,7 +158,13 @@ const Upload: React.FC = () => {
                   type="number"
                   min="0"
                   value={commit.delay_mins}
-                  onChange={(e) => updateCommit(index, 'delay_mins', parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    updateCommit(
+                      index,
+                      "delay_mins",
+                      parseInt(e.target.value) || 0
+                    )
+                  }
                 />
               </div>
             </div>
@@ -161,7 +174,7 @@ const Upload: React.FC = () => {
         {error && <div className="error-message">{error}</div>}
 
         <button type="submit" disabled={loading} className="submit-btn">
-          {loading ? 'Creating Job...' : 'Create Job'}
+          {loading ? "Creating Job..." : "Create Job"}
         </button>
       </form>
     </div>

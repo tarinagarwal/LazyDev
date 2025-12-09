@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { jobsApi } from '../api/client';
-import type { JobDetail } from '../api/client';
+import React, { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { jobsApi } from "../api/client";
+import type { JobDetail } from "../api/client";
 
 const JobDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +16,7 @@ const JobDetails: React.FC = () => {
       const data = await jobsApi.get(id);
       setJob(data);
     } catch (err) {
-      console.error('Failed to fetch job:', err);
+      console.error("Failed to fetch job:", err);
     } finally {
       setLoading(false);
     }
@@ -26,7 +26,7 @@ const JobDetails: React.FC = () => {
     fetchJob();
     // Poll for updates if job is in progress
     const interval = setInterval(() => {
-      if (job?.status === 'pending' || job?.status === 'in_progress') {
+      if (job?.status === "pending" || job?.status === "in_progress") {
         fetchJob();
       }
     }, 5000);
@@ -34,13 +34,14 @@ const JobDetails: React.FC = () => {
   }, [id, job?.status]);
 
   const handleCancel = async () => {
-    if (!id || !window.confirm('Are you sure you want to cancel this job?')) return;
+    if (!id || !window.confirm("Are you sure you want to cancel this job?"))
+      return;
     setCancelling(true);
     try {
       await jobsApi.cancel(id);
       fetchJob();
     } catch (err) {
-      console.error('Failed to cancel job:', err);
+      console.error("Failed to cancel job:", err);
     } finally {
       setCancelling(false);
     }
@@ -48,18 +49,18 @@ const JobDetails: React.FC = () => {
 
   const getStatusBadge = (status: string) => {
     const badges: Record<string, string> = {
-      pending: '⏳ Pending',
-      in_progress: '🔄 In Progress',
-      completed: '✅ Completed',
-      failed: '❌ Failed',
-      cancelled: '🛑 Cancelled',
-      skipped: '⏭️ Skipped',
+      pending: "⏳ Pending",
+      in_progress: "🔄 In Progress",
+      completed: "✅ Completed",
+      failed: "❌ Failed",
+      cancelled: "🛑 Cancelled",
+      skipped: "⏭️ Skipped",
     };
     return badges[status] || status;
   };
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return '-';
+    if (!dateStr) return "-";
     return new Date(dateStr).toLocaleString();
   };
 
@@ -76,21 +77,23 @@ const JobDetails: React.FC = () => {
     );
   }
 
-  const canCancel = job.status === 'pending' || job.status === 'in_progress';
+  const canCancel = job.status === "pending" || job.status === "in_progress";
 
   return (
     <div className="job-details-page">
       <header className="page-header">
-        <Link to="/" className="back-link">← Back to Dashboard</Link>
+        <Link to="/" className="back-link">
+          ← Back to Dashboard
+        </Link>
         <h1>Job Details</h1>
       </header>
 
       <div className="job-info">
         <div className="info-row">
           <span className="label">Repository:</span>
-          <a 
-            href={`https://github.com/${job.repo}`} 
-            target="_blank" 
+          <a
+            href={`https://github.com/${job.repo}`}
+            target="_blank"
             rel="noopener noreferrer"
             className="repo-link"
           >
@@ -107,12 +110,18 @@ const JobDetails: React.FC = () => {
           <span className="label">Progress:</span>
           <div className="progress-inline">
             <div className="progress-bar">
-              <div 
+              <div
                 className="progress-fill"
-                style={{ width: `${(job.completed_commits / job.total_commits) * 100}%` }}
+                style={{
+                  width: `${
+                    (job.completed_commits / job.total_commits) * 100
+                  }%`,
+                }}
               />
             </div>
-            <span>{job.completed_commits}/{job.total_commits} commits</span>
+            <span>
+              {job.completed_commits}/{job.total_commits} commits
+            </span>
           </div>
         </div>
         <div className="info-row">
@@ -136,12 +145,12 @@ const JobDetails: React.FC = () => {
       </div>
 
       {canCancel && (
-        <button 
-          onClick={handleCancel} 
+        <button
+          onClick={handleCancel}
           disabled={cancelling}
           className="cancel-btn"
         >
-          {cancelling ? 'Cancelling...' : 'Cancel Job'}
+          {cancelling ? "Cancelling..." : "Cancel Job"}
         </button>
       )}
 
@@ -156,11 +165,12 @@ const JobDetails: React.FC = () => {
               <div className="commit-details">
                 <div className="commit-message">{commit.message}</div>
                 <div className="commit-files">
-                  Files: {commit.files.join(', ')}
+                  Files: {commit.files.join(", ")}
                 </div>
                 <div className="commit-meta">
-                  {index === 0 ? 'Immediate' : `${commit.delay_mins} min delay`}
-                  {commit.committed_at && ` • Committed: ${formatDate(commit.committed_at)}`}
+                  {index === 0 ? "Immediate" : `${commit.delay_mins} min delay`}
+                  {commit.committed_at &&
+                    ` • Committed: ${formatDate(commit.committed_at)}`}
                 </div>
                 {commit.error && (
                   <div className="commit-error">Error: {commit.error}</div>
