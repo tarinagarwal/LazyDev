@@ -197,8 +197,9 @@ async def run_worker():
                 await asyncio.sleep(10)
                 continue
             
-            # Block and wait for job
-            result = client.blpop("lazydev:jobs", timeout=5)
+            # Run blocking Redis call in thread pool
+            loop = asyncio.get_event_loop()
+            result = await loop.run_in_executor(None, lambda: client.blpop("lazydev:jobs", timeout=5))
             if result:
                 _, job_id = result
                 job_id = job_id.decode('utf-8')
