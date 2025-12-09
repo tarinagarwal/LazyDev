@@ -11,6 +11,8 @@ const Upload: React.FC = () => {
   ]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [jsonMode, setJsonMode] = useState(false);
+  const [jsonInput, setJsonInput] = useState("");
   const navigate = useNavigate();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +59,18 @@ const Upload: React.FC = () => {
     setError("");
 
     try {
-      const result = await jobsApi.upload(zipFile, { repo, commits });
+      let finalCommits = commits;
+      if (jsonMode) {
+        try {
+          const parsed = JSON.parse(jsonInput);
+          finalCommits = Array.isArray(parsed) ? parsed : parsed.commits || [];
+        } catch {
+          setError("Invalid JSON format");
+          setLoading(false);
+          return;
+        }
+      }
+      const result = await jobsApi.upload(zipFile, { repo, commits: finalCommits });
       navigate(`/jobs/${result.job_id}`);
     } catch (err: any) {
       setError(err.response?.data?.detail || "Upload failed");
@@ -108,67 +121,98 @@ const Upload: React.FC = () => {
         <div className="form-section">
           <div className="section-header">
             <h3>Commit Plan</h3>
-            <button type="button" onClick={addCommit} className="add-btn">
-              + Add Commit
-            </button>
+            <div className="mode-toggle">
+              <button
+                type="button"
+                onClick={() => setJsonMode(false)}
+                className={`toggle-btn ${!jsonMode ? 'active' : ''}`}
+              >
+                Manual
+              </button>
+              <button
+                type="button"
+                onClick={() => setJsonMode(true)}
+                className={`toggle-btn ${jsonMode ? 'active' : ''}`}
+              >
+                Paste JSON
+              </button>
+            </div>
           </div>
 
-          {commits.map((commit, index) => (
-            <div key={index} className="commit-card">
-              <div className="commit-header">
-                <span className="commit-number">Commit #{index + 1}</span>
-                {commits.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeCommit(index)}
-                    className="remove-btn"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label>Files (comma-separated)</label>
-                <input
-                  type="text"
-                  placeholder="file1.py, src/app.js, README.md"
-                  value={commit.files.join(", ")}
-                  onChange={(e) => updateCommit(index, "files", e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Commit Message</label>
-                <input
-                  type="text"
-                  placeholder="Initial setup"
-                  value={commit.message}
-                  onChange={(e) =>
-                    updateCommit(index, "message", e.target.value)
-                  }
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Delay (minutes after previous commit)</label>
-                <input
-                  type="number"
-                  min="0"
-                  value={commit.delay_mins}
-                  onChange={(e) =>
-                    updateCommit(
-                      index,
-                      "delay_mins",
-                      parseInt(e.target.value) || 0
-                    )
-                  }
-                />
-              </div>
+          {jsonMode ? (
+            <div className="form-group">
+              <label>Paste Commit Plan JSON</label>
+              <textarea
+                className="json-input"
+                placeholder={`[\n  { "files": ["file1.py"], "message": "Initial", "delay_mins": 0 },\n  { "files": ["src/app.js"], "message": "Add app", "delay_mins": 30 }\n]`}
+                value={jsonInput}
+                onChange={(e) => setJsonInput(e.target.value)}
+                rows={12}
+              />
             </div>
-          ))}
+          ) : (
+            <>
+              <button type="button" onClick={addCommit} className="add-btn" style={{marginBottom: '16px'}}>
+                + Add Commit
+              </button>
+              {commits.map((commit, index) => (
+                <div key={index} className="commit-card">
+                  <div className="commit-header">
+                    <span className="commit-number">Commit #{index + 1}</span>
+                    {commits.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeCommit(index)}
+                        className="remove-btn"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="form-group">
+                    <label>Files (comma-separated)</label>
+                    <input
+                      type="text"
+                      placeholder="file1.py, src/app.js, README.md"
+                      value={commit.files.join(", ")}
+                      onChange={(e) => updateCommit(index, "files", e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Commit Message</label>
+                    <input
+                      type="text"
+                      placeholder="Initial setup"
+                      value={commit.message}
+                      onChange={(e) =>
+                        updateCommit(index, "message", e.target.value)
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Delay (minutes after previous commit)</label>
+                    <input
+                      type="number"
+                      min="0"
+                      value={commit.delay_mins}
+                      onChange={(e) =>
+                        updateCommit(
+                          index,
+                          "delay_mins",
+                          parseInt(e.target.value) || 0
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
 
         {error && <div className="error-message">{error}</div>}

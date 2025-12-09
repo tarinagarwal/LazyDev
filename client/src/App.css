@@ -521,3 +521,54 @@ body {
 .error-page a {
   color: #4a9eff;
 }
+
+/* Mode Toggle */
+.mode-toggle {
+  display: flex;
+  gap: 4px;
+  background: #252525;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.toggle-btn {
+  padding: 8px 16px;
+  background: transparent;
+  color: #888;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.toggle-btn.active {
+  background: #4a9eff;
+  color: white;
+}
+
+.toggle-btn:hover:not(.active) {
+  color: #e0e0e0;
+}
+
+.json-input {
+  width: 100%;
+  padding: 16px;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-family: 'Consolas', 'Monaco', monospace;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 200px;
+}
+
+.json-input:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+.json-input::placeholder {
+  color: #666;
+}
