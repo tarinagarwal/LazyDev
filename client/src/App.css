@@ -1,0 +1,502 @@
+/* LazyDev Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0f0f0f;
+  color: #e0e0e0;
+  min-height: 100vh;
+}
+
+/* Login Page */
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-box {
+  background: #1a1a1a;
+  padding: 40px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.login-box h1 {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.login-box .tagline {
+  color: #888;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #e0e0e0;
+  font-size: 1rem;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4a9eff;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 6px;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.error-message {
+  background: #3d1515;
+  color: #ff6b6b;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-btn, .submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #4a9eff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-btn:hover, .submit-btn:hover {
+  background: #3a8eef;
+}
+
+.login-btn:disabled, .submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Dashboard */
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+}
+
+.dashboard-header h1 {
+  font-size: 1.8rem;
+}
+
+.dashboard-header nav {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-btn {
+  padding: 10px 20px;
+  background: #4a9eff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.nav-btn:hover {
+  background: #3a8eef;
+}
+
+.nav-btn.logout {
+  background: #333;
+}
+
+.nav-btn.logout:hover {
+  background: #444;
+}
+
+.dashboard-content h2 {
+  margin-bottom: 20px;
+}
+
+.loading, .empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.empty-state .create-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: #4a9eff;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+/* Job Cards */
+.jobs-list {
+  display: grid;
+  gap: 16px;
+}
+
+.job-card {
+  display: block;
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.job-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.job-repo {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.job-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-pending { background: #3d3d15; color: #ffd93d; }
+.status-in_progress { background: #15303d; color: #4a9eff; }
+.status-completed { background: #153d1f; color: #4ade80; }
+.status-failed { background: #3d1515; color: #ff6b6b; }
+.status-cancelled { background: #2d2d2d; color: #888; }
+
+.job-progress {
+  margin-bottom: 12px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #333;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a9eff, #4ade80);
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+
+.progress-text {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.job-meta {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Upload Page */
+.upload-page, .job-details-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  margin-bottom: 30px;
+}
+
+.back-link {
+  color: #4a9eff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.page-header h1 {
+  margin-top: 12px;
+  font-size: 1.8rem;
+}
+
+.upload-form {
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 12px;
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+.form-section h3 {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333;
+}
+
+.section-header h3 {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.add-btn {
+  padding: 8px 16px;
+  background: #333;
+  color: #4a9eff;
+  border: 1px solid #4a9eff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.add-btn:hover {
+  background: #4a9eff;
+  color: white;
+}
+
+.commit-card {
+  background: #252525;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.commit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.commit-number {
+  font-weight: 600;
+  color: #4a9eff;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #ff6b6b;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Job Details */
+.job-info {
+  background: #1a1a1a;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #252525;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row .label {
+  font-weight: 500;
+  color: #888;
+}
+
+.info-row.error {
+  color: #ff6b6b;
+}
+
+.repo-link {
+  color: #4a9eff;
+  text-decoration: none;
+}
+
+.repo-link:hover {
+  text-decoration: underline;
+}
+
+.progress-inline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  max-width: 300px;
+}
+
+.progress-inline .progress-bar {
+  flex: 1;
+  margin: 0;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+}
+
+.cancel-btn {
+  padding: 12px 24px;
+  background: #3d1515;
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.cancel-btn:hover {
+  background: #ff6b6b;
+  color: white;
+}
+
+.commits-section h2 {
+  margin-bottom: 16px;
+}
+
+.commits-list {
+  display: grid;
+  gap: 12px;
+}
+
+.commit-item {
+  display: flex;
+  gap: 16px;
+  background: #1a1a1a;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #333;
+}
+
+.commit-item.status-completed {
+  border-left-color: #4ade80;
+}
+
+.commit-item.status-failed {
+  border-left-color: #ff6b6b;
+}
+
+.commit-item.status-in_progress {
+  border-left-color: #4a9eff;
+}
+
+.commit-item.status-pending {
+  border-left-color: #ffd93d;
+}
+
+.commit-item.status-skipped {
+  border-left-color: #888;
+}
+
+.commit-status {
+  min-width: 120px;
+}
+
+.commit-details {
+  flex: 1;
+}
+
+.commit-message {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.commit-files {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.commit-meta {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.commit-error {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+.loading-page, .error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+}
+
+.error-page a {
+  color: #4a9eff;
+}
