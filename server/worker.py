@@ -15,8 +15,17 @@ from services.email import send_commit_notification, send_job_complete_notificat
 
 settings = get_settings()
 
-# Redis connection
-redis_client = redis.from_url(settings.redis_url)
+# Redis connection (lazy init)
+redis_client = None
+
+def get_redis():
+    global redis_client
+    if redis_client is None and settings.redis_url:
+        try:
+            redis_client = redis.from_url(settings.redis_url)
+        except Exception as e:
+            print(f"Redis connection failed: {e}")
+    return redis_client
 
 # Temp directory for work
 WORK_DIR = os.path.join(tempfile.gettempdir(), "lazydev_jobs")
@@ -24,7 +33,14 @@ WORK_DIR = os.path.join(tempfile.gettempdir(), "lazydev_jobs")
 
 async def queue_job(job_id: str):
     """Add job to Redis queue for processing"""
-    redis_client.rpush("lazydev:jobs", job_id)
+    client = get_redis()
+    if client:
+        try:
+            client.rpush("lazydev:jobs", job_id)
+        except Exception as e:
+            print(f"Failed to queue job {job_id}: {e}")
+    else:
+        print(f"Redis unavailable, job {job_id} saved to DB only")
 
 
 async def get_db_client():
@@ -175,8 +191,14 @@ async def run_worker():
     
     while True:
         try:
+            client = get_redis()
+            if not client:
+                print("Redis not available, waiting...")
+                await asyncio.sleep(10)
+                continue
+            
             # Block and wait for job
-            result = redis_client.blpop("lazydev:jobs", timeout=5)
+            result = client.blpop("lazydev:jobs", timeout=5)
             if result:
                 _, job_id = result
                 job_id = job_id.decode('utf-8')
