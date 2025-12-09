@@ -13,7 +13,23 @@ const Upload: React.FC = () => {
   const [error, setError] = useState("");
   const [jsonMode, setJsonMode] = useState(false);
   const [jsonInput, setJsonInput] = useState("");
+  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
+
+  const aiPrompt = `Analyze this project and generate a commit plan JSON for gradual commits. Return ONLY valid JSON array, no explanation.
+
+Format:
+[
+  { "files": ["file1.py", "folder/file2.js"], "message": "descriptive commit message", "delay_mins": 0 },
+  { "files": ["next-file.ts"], "message": "another commit", "delay_mins": 30 }
+]
+
+Rules:
+- Group related files logically (e.g., config files together, features together)
+- Use meaningful commit messages following conventional commits
+- First commit delay_mins should be 0, subsequent ones 15-60 mins
+- Order commits logically (setup → core → features → docs)
+- Include ALL files from the project`;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -143,16 +159,35 @@ const Upload: React.FC = () => {
           </div>
 
           {jsonMode ? (
-            <div className="form-group">
-              <label>Paste Commit Plan JSON</label>
-              <textarea
-                className="json-input"
-                placeholder={`[\n  { "files": ["file1.py"], "message": "Initial", "delay_mins": 0 },\n  { "files": ["src/app.js"], "message": "Add app", "delay_mins": 30 }\n]`}
-                value={jsonInput}
-                onChange={(e) => setJsonInput(e.target.value)}
-                rows={12}
-              />
-            </div>
+            <>
+              <div className="ai-prompt-box">
+                <div className="prompt-header">
+                  <span>Copy this prompt for AI:</span>
+                  <button
+                    type="button"
+                    className="copy-btn"
+                    onClick={() => {
+                      navigator.clipboard.writeText(aiPrompt);
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    }}
+                  >
+                    {copied ? '✓ Copied!' : 'Copy Prompt'}
+                  </button>
+                </div>
+                <pre className="prompt-text">{aiPrompt}</pre>
+              </div>
+              <div className="form-group">
+                <label>Paste Commit Plan JSON</label>
+                <textarea
+                  className="json-input"
+                  placeholder={`[\n  { "files": ["file1.py"], "message": "Initial", "delay_mins": 0 },\n  { "files": ["src/app.js"], "message": "Add app", "delay_mins": 30 }\n]`}
+                  value={jsonInput}
+                  onChange={(e) => setJsonInput(e.target.value)}
+                  rows={12}
+                />
+              </div>
+            </>
           ) : (
             <>
               <button

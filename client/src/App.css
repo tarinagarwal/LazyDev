@@ -572,3 +572,54 @@ body {
 .json-input::placeholder {
   color: #666;
 }
+
+/* AI Prompt Box */
+.ai-prompt-box {
+  background: #1e2a1e;
+  border: 1px solid #2d4a2d;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.prompt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.prompt-header span {
+  color: #4ade80;
+  font-weight: 500;
+}
+
+.copy-btn {
+  padding: 8px 16px;
+  background: #4ade80;
+  color: #0f0f0f;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.copy-btn:hover {
+  background: #22c55e;
+}
+
+.prompt-text {
+  background: #151f15;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #a0a0a0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  font-family: 'Consolas', 'Monaco', monospace;
+}
