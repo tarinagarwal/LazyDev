@@ -172,7 +172,7 @@ Rules:
                       setTimeout(() => setCopied(false), 2000);
                     }}
                   >
-                    {copied ? '✓ Copied!' : 'Copy Prompt'}
+                    {copied ? "✓ Copied!" : "Copy Prompt"}
                   </button>
                 </div>
                 <pre className="prompt-text">{aiPrompt}</pre>
