@@ -185,9 +185,36 @@ async def process_job(job_id: str):
             print(f"Cleanup error: {e}")
 
 
+async def resume_incomplete_jobs():
+    """Re-queue any jobs that were interrupted (in_progress status)"""
+    try:
+        db = await get_db_client()
+        # Find jobs that are stuck in in_progress
+        cursor = db.jobs.find({"status": JobStatus.IN_PROGRESS})
+        jobs = await cursor.to_list(length=100)
+        
+        client = get_redis()
+        for job in jobs:
+            job_id = job["id"]
+            print(f"Resuming interrupted job: {job_id}")
+            if client:
+                client.rpush("lazydev:jobs", job_id)
+            else:
+                # Process directly if Redis unavailable
+                await process_job(job_id)
+        
+        if jobs:
+            print(f"Resumed {len(jobs)} interrupted job(s)")
+    except Exception as e:
+        print(f"Error resuming jobs: {e}")
+
+
 async def run_worker():
     """Main worker loop - process jobs from Redis queue"""
     print("LazyDev Worker started...")
+    
+    # Resume any jobs that were interrupted by restart
+    await resume_incomplete_jobs()
     
     while True:
         try:
