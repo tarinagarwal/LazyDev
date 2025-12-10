@@ -8,6 +8,7 @@ const JobDetails: React.FC = () => {
   const [job, setJob] = useState<JobDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
+  const [countdown, setCountdown] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const fetchJob = async () => {
@@ -22,6 +23,46 @@ const JobDetails: React.FC = () => {
     }
   };
 
+  // Calculate countdown to next commit
+  const calculateCountdown = () => {
+    if (!job || job.status !== "in_progress") {
+      setCountdown(null);
+      return;
+    }
+
+    // Find first pending commit and last completed commit
+    let lastCompletedTime: Date | null = null;
+    let nextPendingIndex = -1;
+
+    for (let i = 0; i < job.commits.length; i++) {
+      const commit = job.commits[i];
+      if (commit.status === "completed" && commit.committed_at) {
+        lastCompletedTime = new Date(commit.committed_at);
+      }
+      if ((commit.status === "pending" || commit.status === "in_progress") && nextPendingIndex === -1) {
+        nextPendingIndex = i;
+      }
+    }
+
+    if (nextPendingIndex === -1 || !lastCompletedTime) {
+      setCountdown(null);
+      return;
+    }
+
+    const nextCommit = job.commits[nextPendingIndex];
+    const nextTime = new Date(lastCompletedTime.getTime() + nextCommit.delay_mins * 60 * 1000);
+    const now = new Date();
+    const diff = nextTime.getTime() - now.getTime();
+
+    if (diff <= 0) {
+      setCountdown("Processing...");
+    } else {
+      const mins = Math.floor(diff / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      setCountdown(`${mins}m ${secs}s`);
+    }
+  };
+
   useEffect(() => {
     fetchJob();
     // Poll for updates if job is in progress
@@ -32,6 +73,13 @@ const JobDetails: React.FC = () => {
     }, 5000);
     return () => clearInterval(interval);
   }, [id, job?.status]);
+
+  // Countdown timer - update every second
+  useEffect(() => {
+    calculateCountdown();
+    const timer = setInterval(calculateCountdown, 1000);
+    return () => clearInterval(timer);
+  }, [job]);
 
   const handleCancel = async () => {
     if (!id || !window.confirm("Are you sure you want to cancel this job?"))
@@ -124,6 +172,12 @@ const JobDetails: React.FC = () => {
             </span>
           </div>
         </div>
+        {countdown && (
+          <div className="info-row countdown-row">
+            <span className="label">Next Commit In:</span>
+            <span className="countdown-timer">{countdown}</span>
+          </div>
+        )}
         <div className="info-row">
           <span className="label">Created:</span>
           <span>{formatDate(job.created_at)}</span>

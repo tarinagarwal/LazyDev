@@ -623,3 +623,25 @@ body {
   overflow-y: auto;
   font-family: "Consolas", "Monaco", monospace;
 }
+
+/* Countdown Timer */
+.countdown-row {
+  background: linear-gradient(135deg, #1a2f1a 0%, #0f1f0f 100%);
+  border: 1px solid #4ade80;
+  border-radius: 8px;
+  padding: 16px !important;
+  margin: 12px 0;
+}
+
+.countdown-timer {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4ade80;
+  font-family: "Consolas", "Monaco", monospace;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
