@@ -31,26 +31,55 @@ const JobDetails: React.FC = () => {
     }
 
     // Find first pending commit and last completed commit
-    let lastCompletedTime: Date | null = null;
+    let referenceTime: Date | null = null;
     let nextPendingIndex = -1;
 
     for (let i = 0; i < job.commits.length; i++) {
       const commit = job.commits[i];
       if (commit.status === "completed" && commit.committed_at) {
-        lastCompletedTime = new Date(commit.committed_at);
+        referenceTime = new Date(commit.committed_at);
       }
-      if ((commit.status === "pending" || commit.status === "in_progress") && nextPendingIndex === -1) {
+      if (
+        (commit.status === "pending" || commit.status === "in_progress") &&
+        nextPendingIndex === -1
+      ) {
         nextPendingIndex = i;
       }
     }
 
-    if (nextPendingIndex === -1 || !lastCompletedTime) {
+    // No more pending commits
+    if (nextPendingIndex === -1) {
       setCountdown(null);
       return;
     }
 
     const nextCommit = job.commits[nextPendingIndex];
-    const nextTime = new Date(lastCompletedTime.getTime() + nextCommit.delay_mins * 60 * 1000);
+
+    // If first commit or no reference, use job started_at
+    if (!referenceTime) {
+      if (job.started_at) {
+        referenceTime = new Date(job.started_at);
+      } else {
+        setCountdown("Starting...");
+        return;
+      }
+    }
+
+    // If this commit is in_progress (currently being pushed), show processing
+    if (nextCommit.status === "in_progress") {
+      setCountdown("Pushing...");
+      return;
+    }
+
+    // If delay is 0 (immediate), show processing
+    if (nextCommit.delay_mins === 0) {
+      setCountdown("Processing...");
+      return;
+    }
+
+    const nextTime = new Date(
+      referenceTime.getTime() + nextCommit.delay_mins * 60 * 1000
+    );
     const now = new Date();
     const diff = nextTime.getTime() - now.getTime();
 
